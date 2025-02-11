@@ -1,6 +1,6 @@
 # Ad-Hoc-Requests-Atliq-Hardwares
- SQL solutions for ad-hoc business requests in the consumer goods domain.
----
+  SQL solutions for ad-hoc business requests in consumer goods domain.
+
 
  ## Overview
 
