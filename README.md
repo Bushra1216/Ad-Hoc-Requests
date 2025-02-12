@@ -10,9 +10,9 @@
 <br>To address this, Tony Sharma, their analytics director created an SQL challenges to evaluate candidates' ability to derive valuable insights from the data.
 
 ### Challenges
-🔹 Task: Solve 10 ad-hoc business requests using SQL.<br> 
-🔹 Objective: Provide data insights that support managemnet decisions.<br>
-🔹 Scope: Create a report focused on sales, customers, and pricing data, tailored for top-level management.<br>
+- Task: Solve 10 ad-hoc business requests using SQL.<br> 
+- Objective: Provide data insights that support managemnet decisions.<br>
+- Scope: Create a report focused on sales, customers, and pricing data, tailored for top-level management.<br>
 <br>
 
  ## Data Information
@@ -103,7 +103,7 @@ This project 10 ad-hoc requests related to sales performance, customer engagemen
 
 ## Featured Requests 
 
-Provide a report with all the unique product counts for each segment and sort them in descending order of product counts.The output should contains segment and product_count fields.
+🔹Provide a report with all the unique product counts for each segment and sort them in descending order of product counts. The output should contains segment and product_count fields.
 
 ``` sql
 
@@ -128,7 +128,66 @@ Result
 | Storage     | 27                |
 | Networking  | 9                 |
 
-The report demonstrates total unique products in each segemnt and it is sorted in descending order based on product counts. In the segment "Notebook" products have the highest count, which indicating a strong product portfolio in this category.
+The report demonstrates total unique products in each segemnt and it is sorted in descending order based on product count.The "Notebook" segment has 129 unique products, indicating a strong product portfolio in this category.
+The "Accessories" segment follows with 116 unique products,also holding a significant share. This information helps product management teams to evaluate key segments and optimize product strategies.<br>
+
+
+
+
+🔹Follow-up: Which segment had the most increase in unique products in 2021 vs 2020? The final output contains these fields, segment, product_count_2020, product_count_2021 and difference
+
+
+
+``` sql
+
+with cte1 as(
+        select a.product_code,a.segment,b.fiscal_year
+   from dim_product as a
+   join fact_gross_price as b on a.product_code=b.product_code
+),
+cte2 as(
+    select segment,
+          count(distinct product_code) as product_count2021 
+   from cte1 where fiscal_year=2021 group by segment
+),
+cte3 as(
+     select segment,
+           count(distinct product_code) as product_count2020
+     from cte1 where fiscal_year=2020 group by segment),
+
+cte4 as(
+     select cte2.segment,
+            cte2.product_count2021,
+            cte3.product_count2020,
+           (cte2.product_count2021-cte3.product_count2020) AS differences
+     from 
+     cte2 FULL OUTER JOIN cte3 on cte2.segment=cte3.segment
+)
+
+select * from cte4 where differences=(select MAX(differences) from cte4);
+
+
+
+```
+<br>
+
+Result
+| **segment** | **product_count2021** | **product_count2020** | **differences** |
+|-------------|-----------------------|-----------------------|-----------------|
+| Accessories | 103                   | 69                    | 34              |
+
+This shows, notable product expansion across multiple segments where the "Accessories" segment increase with 34 additional unique product in 2021 than 2020, reflecting strong market demand and potential profitability.
+
+| segment     | product_count2021 | product_count2020 | differences |
+|-------------|-------------------|-------------------|-------------|
+| Accessories | 103               | 69                | 34          |
+| Notebook    | 108               | 92                | 16          |
+| Peripherals | 75                | 59                | 16          |
+| Desktop     | 22                | 7                 | 15          |
+| Storage     | 17                | 12                | 5           |
+| Networking  | 9                 | 6                 | 3           |
+
+
       
 
 
