@@ -101,7 +101,7 @@ or get the dataset from [atliq_hardware_db](https://drive.google.com/drive/folde
 This project 10 ad-hoc requests related to sales performance, customer engagement across different channel and market, products and pricing data at Atliq Hardwares. Ecah requests is solved using SQL(MSSQL) providing opportunities for improvement and making informed decisions.
 
 
-## Featured Requests 
+### Featured Requests 
 
 🔹Provide a report with all the unique product counts for each segment and sort them in descending order of product counts. The output should contains segment and product_count fields.
 
