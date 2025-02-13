@@ -176,7 +176,7 @@ Result
 |-------------|-----------------------|-----------------------|-----------------|
 | Accessories | 103                   | 69                    | 34              |
 
-This shows, notable product expansion across multiple segments where the "Accessories" segment increase with 34 additional unique product in 2021 than 2020, reflecting strong market demand and potential profitability.
+After extracting the segment with the highest product increase using a subquery, the results highlight notable product expansion across multiple segments. The "Accessories" segment experienced the highest growth, with 34 additional unique products in 2021 compared to 2020. This indicates strong market demand and potential profitability of accessorie product.
 
 | segment     | product_count2021 | product_count2020 | differences |
 |-------------|-------------------|-------------------|-------------|
@@ -186,6 +186,62 @@ This shows, notable product expansion across multiple segments where the "Access
 | Desktop     | 22                | 7                 | 15          |
 | Storage     | 17                | 12                | 5           |
 | Networking  | 9                 | 6                 | 3           |
+
+Following this, the "Notebook" and "Peripherals" segments each saw an increase of 16 unique products that reflects significant expansion. In "Desktop" segment there is also experienced notable growth, adding 15 unique products.
+This will help to understand product growth within different segments and can guide in product development. By leveraging these insights, the company can make data-driven decisions to enhance their product and strengthen market positioning.<br>
+
+
+🔹Generate a report that contains top 5 customers who received an average high pre_invoice_discount_pct for the fiscal year 2021 and in "Indian" market. The final output contains these fields, customer_code, customer, average_discount_percentage
+
+``` sql
+
+with cte1 as(
+         select a.customer_code,
+                a.customer,
+                a.market,
+                b.fiscal_year,
+                b.pre_invoice_discount_pct
+        from
+           dim_customer as a
+        join fact_pre_invoice_deductions as b
+          on a.customer_code=b.customer_code
+),
+
+cte2 as(
+     select customer_code,
+            customer,
+            avg(pre_invoice_discount_pct) as high_envoice,
+            market
+     from
+         cte1
+     where fiscal_year=2021
+     group by customer_code,
+              customer,
+               market
+)
+
+select top 5 customer_code,
+       customer,high_envoice
+from cte2 
+where market='India'
+order by high_envoice desc;
+
+```
+<br>
+
+Result
+
+| **customer_code** | **customer** | **high_envoice** |
+|-------------------|--------------|------------------|
+| 90002009          | Flipkart     | 0.308300         |
+| 90002006          | Viveks       | 0.303800         |
+| 90002003          | Ezone        | 0.302800         |
+| 90002002          | Croma        | 0.302500         |
+| 90002016          | Amazon       | 0.293300         |
+
+
+
+
 
 
       
