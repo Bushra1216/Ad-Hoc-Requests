@@ -133,7 +133,7 @@ The report demonstrates total unique products in each segemnt and it is sorted i
 The "Accessories" segment follows with 116 unique products,also holding a significant share. This information helps product management teams to evaluate key segments and optimize product strategies.<br>
 
 
-
+  <br>
 
 🔹Follow-up: Which segment had the most increase in unique products in 2021 vs 2020? The final output contains these fields, segment, product_count_2020, product_count_2021 and difference
 
@@ -191,6 +191,7 @@ After extracting the segment with the highest product increase using a subquery,
 Following this, the "Notebook" and "Peripherals" segments each saw an increase of 16 unique products that reflects significant expansion. In "Desktop" segment there is also experienced notable growth, adding 15 unique products.
 This will help to understand product growth within different segments and can guide in product development. By leveraging these insights, the company can make data-driven decisions to enhance their product and strengthen market positioning.<br>
 
+ <br>
 
 🔹Generate a report that contains top 5 customers who received an average high pre_invoice_discount_pct for the fiscal year 2021 and in "Indian" market. The final output contains these fields, customer_code, customer, average_discount_percentage
 
@@ -211,7 +212,7 @@ with cte1 as(
 cte2 as(
      select customer_code,
             customer,
-            avg(pre_invoice_discount_pct) as high_envoice,
+            cast(avg(pre_invoice_discount_pct)*100 as decimal(10,2)) as average_discount_percentage,
             market
      from
          cte1
@@ -222,23 +223,25 @@ cte2 as(
 )
 
 select top 5 customer_code,
-       customer,high_envoice
+       customer,average_discount_percentage
 from cte2 
 where market='India'
-order by high_envoice desc;
+order by average_discount_percentage desc;
 
 ```
 <br>
 
 Result
 
-| **customer_code** | **customer** | **high_envoice** |
-|-------------------|--------------|------------------|
-| 90002009          | Flipkart     | 0.308300         |
-| 90002006          | Viveks       | 0.303800         |
-| 90002003          | Ezone        | 0.302800         |
-| 90002002          | Croma        | 0.302500         |
-| 90002016          | Amazon       | 0.293300         |
+| **customer_code** | **customer** | **average_discount_percentage** |
+|-------------------|--------------|---------------------------------|
+| 90002009          | Flipkart     | 30.83                           |
+| 90002006          | Viveks       | 30.38                           |
+| 90002003          | Ezone        | 30.28                           |
+| 90002002          | Croma        | 30.25                           |
+| 90002016          | Amazon       | 29.33                           |
+
+
 
 
 
