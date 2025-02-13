@@ -10,6 +10,8 @@ select distinct market from dim_customer where customer='Atliq Exclusive' and re
 
 
 
+
+
 /* Request 2. What is the percentage of unique product increase in 2021 vs. 2020? The
 final output contains these fields,
 unique_products_2020
@@ -111,6 +113,7 @@ select * from cte4 order by differences desc;
 
 
 
+
 /* Request 5. Get the products that have the highest and lowest manufacturing costs.
 The final output should contain these fields,
 product_code
@@ -143,7 +146,7 @@ cte3 as(
     from cte1
     where manufacturing_cost = (select min(manufacturing_cost) from cte1)
 )
-                                        
+	
 --to show max and min cost use union(as it shows in vertically)
 select * from cte2 union select * from cte3;
 
@@ -161,32 +164,35 @@ average_discount_percentage
 
 with cte1 as(
          select a.customer_code,
-	        a.customer,a.market,
-	        b.fiscal_year,
-	        b.pre_invoice_discount_pct 
-	from
-             dim_customer as a 
-	join fact_pre_invoice_deductions as b 
-	    on a.customer_code=b.customer_code
+                a.customer,
+                a.market,
+                b.fiscal_year,
+                b.pre_invoice_discount_pct
+        from
+           dim_customer as a
+        join fact_pre_invoice_deductions as b
+          on a.customer_code=b.customer_code
 ),
 
 cte2 as(
-    select customer_code,customer,
-	   avg(pre_invoice_discount_pct) as high_envoice,market 
-   from
-        cte1 
-   where fiscal_year=2021
-   group by customer_code, 
-	     customer,
-	      market
-   )
+     select customer_code,
+            customer,
+            cast(avg(pre_invoice_discount_pct)*100 as decimal(10,2)) as average_discount_percentage,
+            market
+     from
+         cte1
+     where fiscal_year=2021
+     group by customer_code,
+              customer,
+               market
+)
 
 select top 5 customer_code,
-	    customer,
-	   high_envoice
+       customer,average_discount_percentage
 from cte2 
-where market='India' 
-order by high_envoice desc;
+where market='India'
+order by average_discount_percentage desc;
+
 
 
 
