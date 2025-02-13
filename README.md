@@ -94,8 +94,9 @@
 
 ### Data Source
 To get this data and all other information, can go [Ad-hoc requests_SQL_challenge](https://codebasics.io/challenge/codebasics-resume-project-challenge/7)<br>
-or get the dataset from [atliq_hardware_db](https://drive.google.com/drive/folders/1vj7rMZiUM5ucA6dygV01V4D6K5Zu1P7q?usp=drive_link) that is structured across multiple tables, allowing in-depth analysis to answer ad-hoc business requests.
+or get the dataset from [atliq_hardware_db](https://drive.google.com/drive/folders/1vj7rMZiUM5ucA6dygV01V4D6K5Zu1P7q?usp=drive_link) that is structured across multiple tables, allowing in-depth analysis to answer ad-hoc business requests.<br>
 
+<br>
 
 ## Requests
 This project 10 ad-hoc requests related to sales performance, customer engagement across different channel and market, products and pricing data at Atliq Hardwares. Ecah requests is solved using SQL(MSSQL) providing opportunities for improvement and making informed decisions.
