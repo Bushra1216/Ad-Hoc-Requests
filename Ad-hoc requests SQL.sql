@@ -357,23 +357,33 @@ rank_order*/
 
  
 
- --prothome join korsi 2021 er data
+ --perform join to get 2021 data
 with cte1 as(
-select a.division,a.product_code,a.product,b.sold_quantity,b.fiscal_year from dim_product as a join
-fact_sales_monthly as b on a.product_code=b.product_code where b.fiscal_year=2021),
+      select a.division,
+	     a.product_code,a.product,
+	     b.sold_quantity,b.fiscal_year
+     from dim_product as a 
+     join fact_sales_monthly as b
+      on a.product_code=b.product_code
+     where b.fiscal_year=2021
+),
 
---then each product er quantity sold bar korlum 
+--this give sold quantity of each product
 cte2 as(
-select division,product_code,product,SUM(sold_quantity) AS total_sold_quantity from cte1 
-group by product,product_code,division),
+    select division,
+	   product_code,
+	   product,
+	   SUM(sold_quantity) AS total_sold_quantity 
+   from cte1 
+   group by product,
+	    product_code,
+	    division
+),
 
-
-/*division er upor partition disi jeno ekta division a bashi solded(order by quanti_sold) product 
-gular rank kore*/
+--using rank() order by total sold quantity to get the rank of each product
 cte3 as(
 select *,RANK() over(partition by division order by total_sold_quantity desc) as ranking from cte2)
 
---last cte3 theke top 3 bar korsi where condition use kore
 select * from cte3 where ranking<=3;
 
 
