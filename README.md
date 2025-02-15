@@ -241,9 +241,9 @@ Result
 | 90002002          | Croma        | 30.25                           |
 | 90002016          | Amazon       | 29.33                           |
 
+This report provides a list of top 5 customers in the Indian market who received the highest average pre-invoice discount percentage for the fiscal year 2021. Flipkart received the highest average discount of 30.83%, followed by Viveks at 30.38% and Ezone 30.28%. This significant discount received by these customers indicate that Flipcart and Viveks are key players in the indian market with strong negotiation power.<br>
 
-
-
+Understanding why these customers receive high discounts can help the business develop competitive pricing policies and refine negotiation strategies, ensuring both profitability and strong customer relationships in the Indian market.
 
 
 
