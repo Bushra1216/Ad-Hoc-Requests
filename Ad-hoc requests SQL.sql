@@ -19,26 +19,25 @@ unique_products_2021
 percentage_chg*/
 
 with cte1 as(
-       select count(distinct product_code) AS unique_products_2021 
-from   dbo.fact_gross_price 
-where  fiscal_year=2021
+        select count(distinct product_code) AS unique_products_2021 
+        from   
+	   dbo.fact_gross_price 
+        where
+	   fiscal_year=2021
 ),
 cte2 as(
-     select count(distinct product_code) AS unique_products_2020 
-from dbo.fact_gross_price 
-where fiscal_year=2020
+      select count(distinct product_code) AS unique_products_2020 
+      from dbo.fact_gross_price 
+      where fiscal_year=2020
 ),
 cte3 as(
-       select * from cte1 CROSS JOIN cte2 
+     select * from cte1 CROSS JOIN cte2 
 )
 
-    select *,
-          CAST(  ((CAST(unique_products_2021 AS DECIMAL(10,2)) - 
-                 CAST(unique_products_2020 AS DECIMAL(10,2))) / 
-              CAST(unique_products_2020 AS DECIMAL(10,2)) * 100) AS DECIMAL(10,2)
-	     ) 
-          AS percentage_chg
-    from cte3;
+select *,
+      CAST(((CAST(unique_products_2021 AS DECIMAL(10,2)) - CAST(unique_products_2020 AS DECIMAL(10,2))) / CAST(unique_products_2020 AS DECIMAL(10,2)) * 100) AS DECIMAL(10,2)) 
+      AS percentage_chg
+from cte3;
 
 
 
@@ -81,18 +80,18 @@ join fact_gross_price as b on a.product_code=b.product_code
 cte2 as(
      select segment,
 	    count(distinct product_code) as product_count2021 
-from cte1 
-where fiscal_year=2021 
-group by segment
+     from cte1 
+     where fiscal_year=2021 
+     group by segment
 ),
 
 --counted product from the year 2020 by segment
 cte3 as(
     select segment,
 	   count(distinct product_code) as product_count2020
-from cte1 
-where fiscal_year=2020 
-group by segment
+    from cte1 
+    where fiscal_year=2020 
+    group by segment
 ),
 
 --as segment common then join this and got result by segment in 2021 and 2020 total unique products
@@ -101,9 +100,11 @@ cte4 as(
 	   cte2.product_count2021,
 	   cte3.product_count2020,
            (cte2.product_count2021-cte3.product_count2020) AS differences 
- from 
- cte2 FULL OUTER JOIN cte3 on cte2.segment=cte3.segment )
-
+    from 
+        cte2 
+    FULL OUTER JOIN cte3 
+    on cte2.segment=cte3.segment 
+)
 --lastly select max difference of the most increase in unique products(2021 vs 2020)
 select * from cte4 order by differences desc;
 
@@ -213,8 +214,8 @@ gross sales=gross price * sold quantity
 
 with cte1 as(
       select customer_code 
-from dim_customer 
-where customer='Atliq Exclusive'
+      from dim_customer 
+      where customer='Atliq Exclusive'
 ),
 
 cte2 as(
@@ -265,9 +266,9 @@ with cte as(
 	from fact_sales_monthly 
         where fiscal_year=2020
 )
- select [Quarter],
+select [Quarter],
 	SUM(sold_quantity) as total_sold_quantity 
- from cte 
+from cte 
 group by [Quarter] 
 order by total_sold_quantity desc;
 
@@ -293,10 +294,10 @@ with cte1 as(
  --then join with fact_gross_price table to get gross_price column as well where fiscal_year is same on both table
 cte2 as(
       select a.*,gross_price 
-from cte1 as a 
-join fact_gross_price as b
- on a.product_code=b.product_code and 
-    a.fiscal_year=b.fiscal_year
+      from cte1 as a 
+      join fact_gross_price as b
+      on a.product_code=b.product_code and 
+         a.fiscal_year=b.fiscal_year
 ),
 
 --this return the gross sales(in million) of the product in each channel on the year 2021
@@ -305,14 +306,14 @@ cte3 as(
        CAST(
 	   SUM((gross_price*sold_quantity))/1000000 AS DECIMAL(10,2)
 	)as gross_sales_mln 
- from cte2 
- where fiscal_year=2021 
- group by channel
+      from cte2 
+      where fiscal_year=2021 
+      group by channel
 )
 
 --show the channel wise gross sales in million unit and percentage of contribution- using subquery
 select channel,
-	gross_sales_mln,
+       gross_sales_mln,
 ROUND(CAST(
 	(gross_sales_mln/contribute)*100 AS DECIMAL(10,2)),
 2) as percentage
@@ -325,11 +326,11 @@ order by gross_sales_mln desc;
 
 --another approach-without subquery,cte
 SELECT b.channel,
-  CAST(SUM(c.gross_price * a.sold_quantity) / 1000000 AS DECIMAL(10,2)) AS gross_sales_mln,
-  ROUND(
-        CAST((SUM(c.gross_price * a.sold_quantity) * 100.0) / 
-        SUM(SUM(c.gross_price * a.sold_quantity)) OVER() AS DECIMAL(10,2)), 2
-    ) AS percentage
+       CAST(SUM(c.gross_price * a.sold_quantity) / 1000000 AS DECIMAL(10,2)) AS gross_sales_mln,
+       ROUND(
+            CAST((SUM(c.gross_price * a.sold_quantity) * 100.0) / 
+            SUM(SUM(c.gross_price * a.sold_quantity)) OVER() AS DECIMAL(10,2)), 2
+       ) AS percentage
 FROM fact_sales_monthly as a
 JOIN dim_customer as b on a.customer_code = b.customer_code
 JOIN fact_gross_price as c on a.product_code = c.product_code 
