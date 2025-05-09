@@ -142,10 +142,10 @@ The "Accessories" segment follows with 116 unique products,also holding a signif
 ``` sql
 
 with cte1 as(
-        select a.product_code,a.segment,b.fiscal_year
-        from dim_product as a
-        join fact_gross_price as b
-        on a.product_code=b.product_code
+      select a.product_code,a.segment,b.fiscal_year
+      from dim_product as a
+      join fact_gross_price as b
+      on a.product_code=b.product_code
 ),
 cte2 as(
       select segment,
