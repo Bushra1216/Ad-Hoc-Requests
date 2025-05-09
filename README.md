@@ -143,18 +143,24 @@ The "Accessories" segment follows with 116 unique products,also holding a signif
 
 with cte1 as(
         select a.product_code,a.segment,b.fiscal_year
-   from dim_product as a
-   join fact_gross_price as b on a.product_code=b.product_code
+        from dim_product as a
+        join fact_gross_price as b
+        on a.product_code=b.product_code
 ),
 cte2 as(
-    select segment,
-          count(distinct product_code) as product_count2021 
-   from cte1 where fiscal_year=2021 group by segment
+      select segment,
+             count(distinct product_code) as product_count2021 
+      from cte1
+      where fiscal_year=2021
+      group by segment
 ),
 cte3 as(
      select segment,
-           count(distinct product_code) as product_count2020
-     from cte1 where fiscal_year=2020 group by segment),
+            count(distinct product_code) as product_count2020
+     from cte1
+     where fiscal_year=2020
+     group by segment
+),
 
 cte4 as(
      select cte2.segment,
@@ -162,10 +168,13 @@ cte4 as(
             cte3.product_count2020,
            (cte2.product_count2021-cte3.product_count2020) AS differences
      from 
-     cte2 FULL OUTER JOIN cte3 on cte2.segment=cte3.segment
+     cte2
+     FULL OUTER JOIN cte3
+     on cte2.segment=cte3.segment
 )
 
-select * from cte4 where differences=(select MAX(differences) from cte4);
+select * from cte4
+where differences=(select MAX(differences) from cte4);
 
 
 
