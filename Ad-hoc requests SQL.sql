@@ -12,6 +12,7 @@ select distinct market from dim_customer where customer='Atliq Exclusive' and re
 
 
 
+
 /* Request 2. What is the percentage of unique product increase in 2021 vs. 2020? The
 final output contains these fields,
 unique_products_2020
@@ -389,6 +390,7 @@ cte3 as(
 select *,RANK() over(partition by division order by total_sold_quantity desc) as ranking from cte2)
 
 select * from cte3 where ranking<=3;
+
 
 
 
