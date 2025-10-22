@@ -61,6 +61,7 @@ order by product_count desc;
 
 
 
+
 /* Request 4. Follow-up: Which segment had the most increase in unique products in
 2021 vs 2020? The final output contains these fields,
 segment
@@ -155,6 +156,8 @@ select * from cte2 union select * from cte3;
 
 
 
+
+
 /* Request 6. Generate a report which contains the top 5 customers who received an
 average high pre_invoice_discount_pct for the fiscal year 2021 and in the
 Indian market. The final output contains these fields,
@@ -185,7 +188,7 @@ cte2 as(
      where fiscal_year=2021
      group by customer_code,
               customer,
-               market
+              market
 )
 
 select top 5 customer_code,
@@ -279,6 +282,7 @@ order by total_sold_quantity desc;
 
 
 
+
 /* Request 9. Which channel helped to bring more gross sales in the fiscal year 2021
 and the percentage of contribution? The final output contains these fields,
 channel
@@ -324,7 +328,7 @@ order by gross_sales_mln desc;
 
 
 
---another approach-without subquery,cte
+--Another approach-without subquery,cte
 SELECT b.channel,
        CAST(SUM(c.gross_price * a.sold_quantity) / 1000000 AS DECIMAL(10,2)) AS gross_sales_mln,
        ROUND(
@@ -357,7 +361,6 @@ total_sold_quantity
 rank_order*/
 
  
-
  --perform join to get 2021 data
 with cte1 as(
       select a.division,
@@ -386,6 +389,7 @@ cte3 as(
 select *,RANK() over(partition by division order by total_sold_quantity desc) as ranking from cte2)
 
 select * from cte3 where ranking<=3;
+
 
 
 
